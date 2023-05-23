@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-Schema = mongoose.Schema;
+const { Schema, model} = require('mongoose');
 
-let sauce = new Schema({
+let sauceSchema = new Schema({
     userId: {type: String},
     name: {type: String},
     manufacturer: {type: String},
@@ -15,3 +14,4 @@ let sauce = new Schema({
     usersDisliked: {type: Number},
 });
 
+module.exports = model('Sauce', sauceSchema);

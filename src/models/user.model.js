@@ -1,5 +1,5 @@
 const { Schema, model} = require('mongoose');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 // const uniqueValidator = require('mongoose-unique-validator')
 
 const userSchema = new Schema({
