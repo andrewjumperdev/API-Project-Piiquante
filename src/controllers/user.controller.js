@@ -1,35 +1,48 @@
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 const User = require("../models/user.model");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const config = require("../config");
 
-exports.signUp = async (req, res) => {
-  const hashPassword = await bcrypt.hash(req.body.password, 10)
-  console.log(hashPassword)
+exports.signUp = async (req, res, next) => {
+  const { email, password } = req.body;
+
   const newUser = new User({
-    email: req.body.email,
-    password: hashPassword,
+    email: email,
+    password: await User.encryptPassword(password),
   });
-  newUser
-    .save()
-    .then(() => res.status(200).json("user créé"))
-    .catch((error) => res.status(400).json({ error }));
+
+  const savedUser = await newUser.save();
+
+  const token = jwt.sign({ id: savedUser._id }, config.SECRET, {
+    expiresIn: 86400, //24hr
+  });
+  res.status(200).json({ token });
+  next();
 };
 
-exports.login = async (req, res) => {    
-    try {
-      const user = await User.findOne({ email: req.body.email });
-      const match = await bcrypt.compare(req.body.password, user.password);
-      console.log(match)
-      if (!user || !match) {        
-        res.status(401).json({ error: 'Invalid username or password' });
-        return;
+exports.login = (req, res) => {
+  try {
+    const user =  User.findOne({ email: req.body.email }).then(user => {
+      if (!user) {
+        return  res.status(401).json({ error: "Invalid username or password" });
       }
-  
-      res.status(200).json({ 
-        message: 'Login successful',
-      });
-    } catch (error) {
-      console.error('Error finding user:', error);
-      res.status(500).json({ error: 'Failed to login' });
-    }
+      const match =  bcrypt.compare(req.body.password, user.password).then(
+        (valid) => {
+          if (!valid || !match) {           
+            return  res.status(401).json({ error: "Invalid username or password" });
+          }
+      
+          const token = jwt.sign({ id: user._id }, config.SECRET, {
+            expiresIn: 86400, //24hr
+          });
+      
+          res.status(200).json({ token });
+        }
+      )
+    })
+
+  } catch (error) {
+    console.error("Error finding user:", error);
+    res.status(500).json({ error: "Failed to login" });
+  }
 };
