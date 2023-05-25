@@ -5,6 +5,17 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(__dirname,'uploads/'))
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname)
+    }
+  })
+  
+const upload = multer({ storage: storage })
+
 // Initializations
 const app = express();
 
@@ -14,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors())
 
 app.use(multer({
-    dest: path.join(__dirname, 'public/uploads')
+    storage,
 }).single('image'))
 
 app.use(indexRoutes);   

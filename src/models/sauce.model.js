@@ -1,6 +1,6 @@
 const { Schema, model} = require('mongoose');
 
-let sauceSchema = new Schema({
+const sauceSchema = new Schema({
     userId: {type: String},
     name: {type: String},
     manufacturer: {type: String},
