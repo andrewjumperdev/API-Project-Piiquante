@@ -24,5 +24,5 @@ exports.getSaucesById = async (req, res) => {
     usersDisliked: sauce.usersDisliked,
   });
   console.log(singleSauce)
-  res.status(200).json(singleSauce);
+  res.status(200).json({id, singleSauce});
 };

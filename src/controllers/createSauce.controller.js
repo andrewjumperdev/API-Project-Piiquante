@@ -1,5 +1,4 @@
 const Sauce = require("../models/sauce.model");
-const path = require('path');
 
 exports.createSauce = async (req, res) => {
   const { sauce } = req.body;
@@ -7,15 +6,18 @@ exports.createSauce = async (req, res) => {
 
   const item = JSON.parse(sauce);
 
-  const uri = imgSauce.path
-  const url =  uri.replace(`C:\\Users\\andre\\Desktop\\ProjectOpenClassrooms\\API-Project-Piiquante\\`, 'http://localhost:3000/')
+  const domain = req.hostname;
+
+  const uri = imgSauce.originalname
+  
+  const fileUrl = `http://${domain}/uploads/${uri}`;
 
   const newSauce = new Sauce({
-    name: item.name,
+    name: item.name,  
     manufacturer: item.manufacturer,
     description: item.description,
     mainPepper: item.description,
-    imageUrl: url,
+    imageUrl: fileUrl,
     heat: item.heat,
     likes: 0,
     dislikes: 0,
