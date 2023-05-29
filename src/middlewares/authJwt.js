@@ -6,7 +6,7 @@ module.exports = verifyToken = async (req, res, next) => {
   const reqToken = req.headers.authorization.split("Bearer ");
 
   const token = reqToken[1];
-
+  
   if (!token) {
     return res.status(403).json({ message: "No token provided" });
   }

@@ -6,6 +6,7 @@ exports.getSauces = async (req, res) => {
 };
 
 exports.getSaucesById = async (req, res) => {
+
   const { id } = req.params;
   const sauce = await Sauce.findById(id);
 
@@ -23,6 +24,10 @@ exports.getSaucesById = async (req, res) => {
     usersLiked: sauce.usersLiked,
     usersDisliked: sauce.usersDisliked,
   });
-  console.log(singleSauce)
-  res.status(200).json({id, singleSauce});
+
+
+    console.log(`Esta es la ${singleSauce}`)
+    res.status(200).json();
+
+
 };

@@ -12,20 +12,22 @@ exports.createSauce = async (req, res) => {
   
   const fileUrl = `http://${domain}/uploads/${uri}`;
 
+  const usrId = '64747451a1d0b7c63412c92e';
+
   const newSauce = new Sauce({
+    userId: usrId,
     name: item.name,  
     manufacturer: item.manufacturer,
     description: item.description,
     mainPepper: item.description,
     imageUrl: fileUrl,
     heat: item.heat,
-    likes: 0,
-    dislikes: 0,
-    usersLiked: 0,
-    usersDisliked: 0,
+    likes: item.likes,
+    dislikes: item.dislikes,
+    usersLiked: ['64747451a1d0b7c63412c92e'],
+    usersDisliked: ['646de3c7967fdb9b3c02cadc'],
   });
 
   const sauceSaved = await newSauce.save();
-  console.log(sauceSaved);
   res.status(200).json({message: 'Product créé'});
 };
