@@ -10,12 +10,12 @@ module.exports = verifyToken = async (req, res, next) => {
   if (!token) {
     return res.status(403).json({ message: "No token provided" });
   }
-  const decoded = jwt.verify(token, config.SECRET); // Variable ENV
+  const decoded = jwt.verify(token, config.SECRET); 
 
   const user = await User.findById(decoded.id, { password: 0 });
   if (!user) {
     return res.status(404).json({ message: "User not found" });
-  }
+  } 
 
   next();
 };
