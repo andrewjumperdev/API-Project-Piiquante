@@ -1,21 +1,26 @@
 const jwt = require("jsonwebtoken");
-const config = require("../config");
-const User = require("../models/user.model");
 
-module.exports = verifyToken = async (req, res, next) => {
-  const reqToken = req.headers.authorization.split("Bearer ");
+const secretKey = process.env.SECRET;
 
-  const token = reqToken[1];
-  
-  if (!token) {
-    return res.status(403).json({ message: "No token provided" });
+function verifyToken(token) {
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    return decoded.id;
+  } catch (error) {
+    throw new Error('Token inválido');
   }
-  const decoded = jwt.verify(token, config.SECRET); 
+}
 
-  const user = await User.findById(decoded.id, { password: 0 });
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  } 
+const authenticate = (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: 'No se proporcionó un token de autenticación' });
+  }
 
+  const token = req.headers.authorization.replace('Bearer ', '');
+  const userId = verifyToken(token);
+
+  req.userId = userId;
   next();
 };
+
+module.exports = authenticate;

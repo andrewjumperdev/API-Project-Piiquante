@@ -1,4 +1,4 @@
-const Sauce = require("../models/sauce.model");
+const Sauce = require("../models/sauce");
 
 exports.createSauce = async (req, res) => {
   const { sauce } = req.body;
@@ -8,7 +8,7 @@ exports.createSauce = async (req, res) => {
 
   const domain = req.hostname;
 
-  const uri = imgSauce.originalname
+  const uri = imgSauce.fieldname;
   
   const fileUrl = `http://${domain}/uploads/${uri}`;
 
@@ -26,6 +26,8 @@ exports.createSauce = async (req, res) => {
     usersLiked: [],
     usersDisliked: [],
   });
+
+  console.log(newSauce.userId)
 
   await newSauce.save();
   res.status(200).json({message: 'Product créé'});

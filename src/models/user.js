@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
-// const uniqueValidator = require('mongoose-unique-validator')
 
 const userSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true}
 });
-
-
-// userSchema.plugin(uniqueValidator);
 
 userSchema.statics.encryptPassword = async (password) => {
     const salt = await bcrypt.genSalt(10);

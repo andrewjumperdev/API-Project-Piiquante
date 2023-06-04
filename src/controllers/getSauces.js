@@ -1,4 +1,4 @@
-const Sauce = require("../models/sauce.model");
+const Sauce = require("../models/sauce");
 
 exports.getSauces = async (req, res) => {
   const sauces = await Sauce.find();
@@ -9,5 +9,4 @@ exports.getSaucesById = async (req, res) => {
   const { id } = req.params;
   const sauce = await Sauce.findById(id); 
   res.status(200).json(sauce);
-
 };

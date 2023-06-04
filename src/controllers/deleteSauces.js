@@ -1,4 +1,4 @@
-const Sauce = require("../models/sauce.model");
+const Sauce = require("../models/sauce");
 
 exports.deleteSauceCtrl = (req, res) => {
   const sauceId = req.params.id;
