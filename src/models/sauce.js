@@ -31,10 +31,10 @@ const sauceSchema = new mongoose.Schema({
       min: 1,
       max: 10
     },
-    likes: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Like'
-    }],
+    likes: {
+      type: Number,
+      default: 0
+    },
     dislikes: {
       type: Number,
       default: 0
