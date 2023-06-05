@@ -1,3 +1,4 @@
 module.exports = {
-    SECRET: process.env.SECRET
+    secretKey: process.env.SECRET,
+    expiresIn: '24h'
 }

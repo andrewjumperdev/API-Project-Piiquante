@@ -1,4 +1,5 @@
 const Sauce = require("../models/sauce");
+const {getUserIdFromToken} = require("../middlewares/authJwt");
 
 exports.createSauce = async (req, res) => {
   const { sauce } = req.body;
@@ -6,15 +7,18 @@ exports.createSauce = async (req, res) => {
 
   const item = JSON.parse(sauce);
 
-  const domain = req.hostname;
+  const http = req.protocol
+  const domain = req.get("host");
 
-  const uri = imgSauce.fieldname;
-  
-  const fileUrl = `http://${domain}/uploads/${uri}`;
+  const uri = imgSauce.filename;
 
+  const fileUrl = `${http}://${domain}/uploads/${uri}`;
+
+  const token = req.headers.authorization.replace('Bearer ', '');
+  const userId = getUserIdFromToken(token);
 
   const newSauce = new Sauce({
-    userId: item.userId,
+    userId: userId,
     name: item.name,  
     manufacturer: item.manufacturer,
     description: item.description,
@@ -26,9 +30,6 @@ exports.createSauce = async (req, res) => {
     usersLiked: [],
     usersDisliked: [],
   });
-
-  console.log(newSauce.userId)
-
   await newSauce.save();
   res.status(200).json({message: 'Product créé'});
 };

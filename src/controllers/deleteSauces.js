@@ -2,7 +2,6 @@ const Sauce = require("../models/sauce");
 
 exports.deleteSauceCtrl = (req, res) => {
   const sauceId = req.params.id;
-  console.log(sauceId)
   Sauce.findByIdAndDelete(sauceId)
     .then((sauce) => {
       console.log(sauce)
