@@ -10,7 +10,10 @@ exports.UpdateSauceCtrl = async (req, res) => {
   const sauce = await Sauce.findById(sauceId)
   const fileName = sauce.imageUrl;
   
-  const filePath = path.join(__dirname, '../public/uploads', fileName.split("/uploads//")[1]);
+  const routeImage = (`__dirname, '../public/uploads', fileName.split("/uploads//")[1]`)
+  const filePath = path.join(routeImage);
+
+  console.log(filePath)
 
   fs.unlink(filePath, (err) => {
     if (err) {
