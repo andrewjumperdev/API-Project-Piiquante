@@ -1,10 +1,9 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const {secretKey, expiresIn} = require("../config");
+const { secretKey } = require("../config");
 
-
-exports.signUp = async (req, res, next) => {
+exports.signUp = async (req, res) => {
   const { email, password } = req.body;
 
   const newUser = new User({
@@ -16,25 +15,21 @@ exports.signUp = async (req, res, next) => {
 
   const payload = {
     id: savedUser._id,
-    username: newUser.email
+    username: newUser.email,
   };
 
-  const token = jwt.sign(payload, secretKey, { expiresIn: '1d' });
+  const token = jwt.sign(payload, secretKey, { expiresIn: "1d" });
 
   res.status(200).json({ token });
-  next();
 };
 
 exports.login = (req, res) => {
   try {
     User.findOne({ email: req.body.email }).then((user) => {
-      
       const objectIdString = user._id.toString();
-      console.log(objectIdString)
-
       const payload = {
         id: objectIdString,
-        username: user.email
+        username: user.email,
       };
       if (!user) {
         return res.status(401).json({ error: "Invalid username or password" });
@@ -48,9 +43,9 @@ exports.login = (req, res) => {
               .json({ error: "Invalid username or password" });
           }
 
-          const token = jwt.sign(payload, secretKey, { expiresIn: '1d' });
+          const token = jwt.sign(payload, secretKey, { expiresIn: "1d" });
 
-          res.status(200).json({ token });
+          res.status(200).json({ userId: payload.id, token });
         });
     });
   } catch (error) {

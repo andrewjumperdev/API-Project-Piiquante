@@ -7,7 +7,7 @@ const {getSauces, getSaucesById} = require("../controllers/getSauces");
 const { likesCtrl } = require("../controllers/likes");
 const { UpdateSauceCtrl } = require("../controllers/updateSauces");
 const { deleteSauceCtrl } = require("../controllers/deleteSauces");
-const upload = require("../middlewares/multer");
+const {upload} = require("../middlewares/multer");
 
 router.post("/api/auth/signup", signUp);
 
@@ -21,7 +21,7 @@ router.get("/api/sauces/:id", getSaucesById);
 
 router.post("/api/sauces/:id/like", likesCtrl);
 
-router.put("/api/sauces/:id", UpdateSauceCtrl);
+router.put("/api/sauces/:id", upload.single('image'), UpdateSauceCtrl);
 
 router.delete("/api/sauces/:id", deleteSauceCtrl);
 

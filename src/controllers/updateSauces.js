@@ -1,38 +1,46 @@
 const Sauce = require("../models/sauce");
 const fs = require("fs");
+const path = require('path');
+
 
 exports.UpdateSauceCtrl = async (req, res) => {
   const sauceId = req.params.id;
+  const sauceData = req.body;
 
-  try {
-    // Buscar la sauce por su _id
-    let sauce = await Sauce.findById(sauceId);
+  const sauce = await Sauce.findById(sauceId)
+  const fileName = sauce.imageUrl;
+  
+  const filePath = path.join(__dirname, '../public/uploads', fileName.split("/uploads//")[1]);
 
-    // Verificar si se proporcionó un archivo
-    if (req.file) {
-      // Eliminar el archivo anterior (si existe)
-      if (sauce.imageUrl) {
-        fs.unlinkSync(sauce.imageUrl); // Elimina el archivo anterior de la ruta
-      }
-
-      // Actualizar la información de la sauce con el archivo cargado
-      sauce.name = req.body.name;
-      sauce.manufacturer = req.body.manufacturer;
-      sauce.heat = req.body.heat;
-      sauce.imageUrl = req.file.path; // Ruta del archivo cargado por Multer
-    } else {
-      // Actualizar la información de la sauce sin archivo
-      sauce.name = req.body.name;
-      sauce.heat = req.body.heat;
-      // Actualiza otros campos según sea necesario
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error('Error al eliminar el archivo:', err);
+      // Maneja el error según tus necesidades
+      return;
     }
+    console.log('Archivo eliminado correctamente');
+  });
 
-    // Guardar los cambios en la base de datos
-    await sauce.save();
-
-    await Sauce.findByIdAndUpdate(sauceId, sauceData, { new: true });
-    res.status(200).json(sauceData);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  // Vérifier si une image a été téléchargée
+  if (req.file) {
+    const url = req.file.path.replace(/\\/g, "/").split("public/uploads");
+    const http = req.protocol;
+    const domain = req.get("host");
+    const fileUrl = `${http}://${domain}/uploads/${url[1]}`;
+    sauceData.imageUrl = fileUrl;
   }
+
+  Sauce.findByIdAndUpdate(sauceId, sauceData, { new: true })
+    .then((updatedSauce) => {
+      if (!updatedSauce) {
+        return res.status(404).json({ message: "Salsa no encontrada" });
+      }
+      res.json({
+        message: "Salsa actualizada exitosamente",
+        sauce: updatedSauce,
+      });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: "Error interno del servidor" });
+    });
 };
