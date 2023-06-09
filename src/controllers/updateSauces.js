@@ -8,18 +8,26 @@ exports.UpdateSauceCtrl = async (req, res) => {
   const sauceData = req.body;
 
   const sauce = await Sauce.findById(sauceId)
-  const fileName = sauce.imageUrl;
-  
-  const filePath = path.join(__dirname, '../public/uploads', fileName.split("/uploads//")[1]);
+  const fileNameUrl = sauce.imageUrl.split("/uploads//")[1];
 
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error('Error al eliminar el archivo:', err);
-      // Maneja el error según tus necesidades
-      return;
-    }
-    console.log('Archivo eliminado correctamente');
-  });
+
+  function eliminarArchivoImagen(nombreArchivo) {
+    const rutaCarpetaPublic = path.join(__dirname, '..', '..', 'public');
+    const rutaArchivo = path.join(rutaCarpetaPublic, 'uploads', nombreArchivo);
+  
+    // Verificar si el archivo existe
+   
+    console.log( fs.existsSync(rutaArchivo))
+    // if (fs.existsSync(rutaArchivo)) {
+    //   // Eliminar el archivo
+    //   fs.unlinkSync(rutaArchivo);
+    //   console.log('Archivo eliminado exitosamente.');
+    // } else {
+    //   console.log(rutaArchivo)
+    //   console.log('El archivo no existe.');
+    // }
+  }
+  eliminarArchivoImagen(fileNameUrl)
 
   // Vérifier si une image a été téléchargée
   if (req.file) {
