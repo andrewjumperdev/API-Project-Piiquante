@@ -1,32 +1,28 @@
 const Sauce = require("../models/sauce");
 const fs = require("fs");
-const path = require('path');
-
+const path = require("path");
 
 exports.UpdateSauceCtrl = async (req, res) => {
   const sauceId = req.params.id;
   const sauceData = req.body;
 
-  const sauce = await Sauce.findById(sauceId)
+  const sauce = await Sauce.findById(sauceId);
   const fileNameUrl = sauce.imageUrl.split("/uploads//")[1];
 
+  const deleteImage = (pathImgName) => {
+    const pathFilePublic = path.join(__dirname, "..", "..", "src/public");
+    const routeFile = path.join(pathFilePublic, "uploads", pathImgName);
 
-  function eliminarArchivoImagen(nombreArchivo) {
-    const rutaCarpetaPublic = path.join(__dirname, '..', '..', 'public');
-    const rutaArchivo = path.join(rutaCarpetaPublic, 'uploads', nombreArchivo);
-  
-  const filePath = path.join(__dirname, '../public/uploads', fileName.split("/uploads//")[1]);
+    fs.unlink(routeFile, (err) => {
+      if (err) {
+        console.error("Delete file error:", err);
+        return;
+      }
+      console.log("File successfully deleted");
+    });
+  };
+  deleteImage(fileNameUrl);
 
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error('Error al eliminar el archivo:', err);
-      // Maneja el error según tus necesidades
-      return;
-    }
-    console.log('Archivo eliminado correctamente');
-  });
-
-  // Vérifier si une image a été téléchargée
   if (req.file) {
     const url = req.file.path.replace(/\\/g, "/").split("public/uploads");
     const http = req.protocol;
@@ -38,14 +34,14 @@ exports.UpdateSauceCtrl = async (req, res) => {
   Sauce.findByIdAndUpdate(sauceId, sauceData, { new: true })
     .then((updatedSauce) => {
       if (!updatedSauce) {
-        return res.status(404).json({ message: "Salsa no encontrada" });
+        return res.status(404).json({ message: "Sauce not found" });
       }
       res.json({
-        message: "Salsa actualizada exitosamente",
+        message: "Sauce successfully updated",
         sauce: updatedSauce,
       });
     })
     .catch((error) => {
-      res.status(500).json({ error: "Error interno del servidor" });
+      res.status(500).json({ error: "Internal server error" });
     });
 };

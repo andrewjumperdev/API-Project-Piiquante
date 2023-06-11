@@ -1,16 +1,18 @@
-const jwt = require('jsonwebtoken');
-const { secretKey } = require('../config');
+const jwt = require("jsonwebtoken");
+const { secretKey } = require("../config");
 
 function authenticate(req, res, next) {
   const token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).json({ error: 'No se proporcionó un token de autenticación' });
+    return res
+      .status(401)
+      .json({ error: "No authentication token was provided" });
   }
 
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ error: 'Token inválido' });
+      return res.status(401).json({ error: "Invalid token" });
     }
 
     req.user = decoded;
@@ -23,11 +25,8 @@ function getUserIdFromToken(token) {
     const decoded = jwt.verify(token, secretKey);
     return decoded.id;
   } catch (error) {
-    throw new Error('Token inválido');
+    throw new Error("Invalid token");
   }
 }
 
-
-module.exports = {authenticate, getUserIdFromToken};
-
-
+module.exports = { authenticate, getUserIdFromToken };
