@@ -11,7 +11,7 @@ exports.UpdateSauceCtrl = async (req, res) => {
 
   const deleteImage = (pathImgName) => {
     const pathFilePublic = path.join(__dirname, "..", "..", "src/public");
-    const routeFile = path.join(pathFilePublic, "uploads", pathImgName);
+    const routeFile = path.join(pathFilePublic + "/uploads/" + pathImgName);
 
     fs.unlink(routeFile, (err) => {
       if (err) {

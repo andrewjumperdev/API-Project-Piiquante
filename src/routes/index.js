@@ -5,8 +5,8 @@ const { signUp, login } = require("../controllers/user");
 const { createSauce } = require("../controllers/createSauce");
 const { getSauces, getSaucesById } = require("../controllers/getSauces");
 const { likesCtrl } = require("../controllers/likes");
-const { UpdateSauceCtrl } = require("../controllers/updateSauces");
-const { deleteSauceCtrl } = require("../controllers/deleteSauces");
+const { UpdateSauceCtrl } = require("../controllers/updateSauce");
+const { deleteSauceCtrl } = require("../controllers/deleteSauce");
 const { upload } = require("../middlewares/multer");
 
 router.post("/api/auth/signup", signUp);

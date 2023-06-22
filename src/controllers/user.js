@@ -19,13 +19,14 @@ exports.signUp = async (req, res) => {
   };
 
   const token = jwt.sign(payload, secretKey, { expiresIn: "1d" });
-
+  console.log(token);
   res.status(200).json({ token });
 };
 
 exports.login = (req, res) => {
   try {
     User.findOne({ email: req.body.email }).then((user) => {
+      console.log(user);
       const objectIdString = user._id.toString();
       const payload = {
         id: objectIdString,

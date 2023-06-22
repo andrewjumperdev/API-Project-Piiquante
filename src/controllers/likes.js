@@ -9,14 +9,16 @@ exports.likesCtrl = async (req, res) => {
   const { like } = req.body;
   const sauce = await Sauce.findById(sauceId);
 
-  if (like === -1) {
-    sauce.dislikes = Math.abs(like);
-    sauce.usersDisliked;
-  } else {
-    sauce.likes = like;
-    sauce.usersLiked = userId;
-  }
+  console.log(like);
 
+  if (like === 1) {
+    await Sauce.findByIdAndUpdate(sauceId, { $inc: { likes: 1 } });
+    sauce.usersLiked.push(userId);
+  }
+  if (like === -1) {
+    await Sauce.findByIdAndUpdate(sauceId, { $inc: { dislikes: 1 } });
+    sauce.usersDisliked.push(userId);
+  }
   await sauce.save();
   res.status(200).json({ like, userId });
 };
