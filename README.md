@@ -1,5 +1,3 @@
-Sure, here's a template for the README.md file on GitHub for your Piiquante project:
-
 # Piiquante - Spicy Sauces Web Application
 
 ![16275605596354_PiiquanteLogo](https://github.com/andrewjumperdev/API-Project-Piiquante/assets/53949770/c2715322-4df7-4eba-9270-63b9e49c9659)
@@ -88,6 +86,3 @@ Contributions are welcome! If you find any issues or have improvements to sugges
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
-Replace the placeholders in the template (like `link-to-logo.png`, `API Endpoints`, `Data Models`, etc.) with relevant information and details specific to your Piiquante project.
